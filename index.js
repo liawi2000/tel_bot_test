@@ -13,7 +13,7 @@ bot.launch();
 
 bot.launch({
   webhook: {
-    domain: "cyclic.sh",
+    domain: "ill-plum-wombat-robe.cyclic.app",
     port: process.env.PORT || 3000,
   },
 });
