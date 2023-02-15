@@ -1,23 +1,25 @@
-const { Telegraf } = require("telegraf");
-const { message } = require("telegraf/filters");
+const { Bot, webhookCallback } = require("grammy");
+const express = require("express");
+
 require("dotenv").config();
 
-console.log("Start");
+const bot = new Bot(process.env.BOT_TOKEN);
 
-const bot = new Telegraf(process.env.BOT_TOKEN);
-bot.start((ctx) => ctx.reply("Welcome"));
-bot.help((ctx) => ctx.reply("Send me a sticker"));
-bot.on(message("sticker"), (ctx) => ctx.reply("👍"));
-bot.hears("hi", (ctx) => ctx.reply("Hey there"));
-bot.launch();
+bot.command("start", (ctx) => ctx.reply("Welcome! Up and running."));
+bot.on("message", (ctx) => ctx.reply("Got another message!"));
 
-bot.launch({
-  webhook: {
-    domain: "https://ill-plum-wombat-robe.cyclic.app",
-    port: process.env.PORT || 3000,
-  },
-});
+if (process.env.NODE_ENV === "production") {
+  const app = express();
+  app.use(express.json());
+  app.use(webhookCallback(bot, "express"));
 
-// Enable graceful stop
+  const PORT = process.env.PORT || 3000;
+  app.listen(PORT, () => {
+    console.log(`Bot listening on port ${PORT}`);
+  });
+} else {
+  bot.start();
+}
+
 process.once("SIGINT", () => bot.stop("SIGINT"));
 process.once("SIGTERM", () => bot.stop("SIGTERM"));
