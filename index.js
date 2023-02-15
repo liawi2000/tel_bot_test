@@ -5,7 +5,7 @@ require("dotenv").config();
 
 const bot = new Bot(process.env.BOT_TOKEN);
 
-bot.command("start", (ctx) => ctx.reply("Welcome! Up and running."));
+bot.command("start", (ctx) => ctx.reply("Welcome! Up and running. Changes"));
 bot.on("message", (ctx) => ctx.reply("Got another message!"));
 
 if (process.env.NODE_ENV === "production") {
